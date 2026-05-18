@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, InfoBox, FAVORABLE } from '../components/ui'
+import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, FAVORABLE } from '../components/ui'
 
 export default function Equity() {
   const { cases } = useApp()
@@ -56,10 +56,6 @@ export default function Equity() {
 
   return (
     <Page>
-      <InfoBox>
-        Holly flagged veterans and disability status as an equity lens. The question: even with a small N, are disabled or veteran clients disproportionately impacted by benefit denials? If yes, there may be a policy implication - systemic denial patterns that the MLP could document and bring to policy makers.
-      </InfoBox>
-
       <Grid4>
         <StatCard label="Veteran clients" value={vets.length} sub={`${vetBenefitDenial} in income/legal cases`} color={C.green} />
         <StatCard label="Disabled clients" value={disabled.length} sub={`${disIncome} in income & insurance`} color={C.amber} />

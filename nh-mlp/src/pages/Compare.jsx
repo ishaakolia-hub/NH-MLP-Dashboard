@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid2, ChartCard, InfoBox } from '../components/ui'
+import { C, Page, Grid2, ChartCard } from '../components/ui'
 
 const STABILITY = [
   { name:'NH MLP (you are here)', model:'Philanthropic + LSC', risk:0.75, color:C.red, tier:'Grant-dependent' },
@@ -37,10 +37,6 @@ export default function Compare() {
 
   return (
     <Page>
-      <InfoBox>
-        Benchmarking NH MLP against published national programs. The funding stability comparison shows the path toward sustainability. Delaware (DMLP) and Illinois (Southern rural MLP) are the most relevant mature models - both started grant-dependent and moved to diversified institutional funding by demonstrating measurable ROI.
-      </InfoBox>
-
       <ChartCard title="NH MLP vs Delaware - iHELP category mix" sub="NH leans heavily toward personal/family (custody, DV). Delaware leans toward income and housing. Reflects different referral pathways and partner focus areas." full style={{marginBottom:16}}>
         <div style={{ display:'flex', gap:14, marginBottom:12 }}>
           <div style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:C.text2 }}>
@@ -63,27 +59,29 @@ export default function Compare() {
       </ChartCard>
 
       {/* Stability comparison */}
-      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:20, marginBottom:16 }}>
+      <div style={{ marginBottom:16 }}>
         <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>Funding stability - NH in national context</div>
-        <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginBottom:20 }}>Based on funding model benchmarks. The target path: grant-dependent to mixed to mature/diversified.</div>
+        <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginBottom:16 }}>Based on funding model benchmarks. The target path: grant-dependent to mixed to mature/diversified.</div>
 
         {['Grant-dependent','Mixed/sustainable','Mature/diversified'].map(tier => (
           <div key={tier} style={{ marginBottom:20 }}>
             <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10, borderBottom:`1px solid ${C.border}`, paddingBottom:6 }}>{tier}</div>
-            {STABILITY.filter(s=>s.tier===tier).map(s => (
-              <div key={s.name} style={{ display:'flex', alignItems:'center', gap:14, marginBottom:12 }}>
-                <div style={{ width:220, flexShrink:0 }}>
-                  <div style={{ fontSize:12, fontWeight:s.name.includes('you are')?600:400, color:s.name.includes('you are')?C.violet:C.text }}>{s.name}</div>
-                  <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginTop:1 }}>{s.model}</div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))', gap:10 }}>
+              {STABILITY.filter(s=>s.tier===tier).map(s => (
+                <div key={s.name} style={{ background:C.surface, border:`1px solid ${s.name.includes('you are')?C.violet:C.border}`, borderRadius:10, padding:16 }}>
+                  <div style={{ fontSize:12, fontWeight:s.name.includes('you are')?600:400, color:s.name.includes('you are')?C.violet:C.text, marginBottom:2 }}>{s.name}</div>
+                  <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginBottom:10 }}>{s.model}</div>
+                  <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                    <div style={{ flex:1, height:6, background:C.bg2, borderRadius:3, overflow:'hidden' }}>
+                      <div style={{ width:`${s.risk*100}%`, height:'100%', background:s.color, borderRadius:3, transition:'width 0.6s' }}/>
+                    </div>
+                    <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:s.color, flexShrink:0 }}>
+                      {s.risk>=0.85?'Very high':s.risk>=0.65?'High':s.risk>=0.4?'Medium':s.risk>=0.2?'Low-med':'Low'} risk
+                    </div>
+                  </div>
                 </div>
-                <div style={{ flex:1, height:8, background:C.bg2, borderRadius:4, overflow:'hidden' }}>
-                  <div style={{ width:`${s.risk*100}%`, height:'100%', background:s.color, borderRadius:4, transition:'width 0.6s' }}/>
-                </div>
-                <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:s.color, width:70, textAlign:'right', flexShrink:0 }}>
-                  {s.risk>=0.85?'Very high':s.risk>=0.65?'High':s.risk>=0.4?'Medium':s.risk>=0.2?'Low-med':'Low'} risk
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { useApp } from '../App'
 import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, CATS, CAT_COLORS, PROG_COLORS, COUNTY_COLORS, FAVORABLE, getYear } from '../components/ui'
 
@@ -65,27 +65,35 @@ export default function Dashboard() {
       </Grid4>
 
       <Grid2>
-        <ChartCard title="Case Growth by Year" sub="Program volume has grown 26x since 2022">
+        <ChartCard title="Case Growth by Year">
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={growthData}><XAxis dataKey="year" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><Tooltip {...tt}/><Bar dataKey="cases" fill={C.violet} radius={[3,3,0,0]}/></BarChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="Cases by iHELP Category" sub="Personal/family and housing dominate">
-          <ResponsiveContainer width="100%" height={160}>
-            <PieChart><Pie data={catData} cx="50%" cy="50%" innerRadius={45} outerRadius={75} dataKey="value" paddingAngle={2}>
+        <ChartCard title="Cases by iHELP Category">
+          <ResponsiveContainer width="100%" height={150}>
+            <PieChart><Pie data={catData} cx="50%" cy="48%" innerRadius={42} outerRadius={68} dataKey="value" paddingAngle={2}>
               {catData.map((e,i)=><Cell key={i} fill={CAT_COLORS[e.name]||C.slate}/>)}
-            </Pie><Tooltip {...tt} formatter={(v,n)=>[v,n]}/><Legend formatter={v=>v.split(' ')[0]} wrapperStyle={{fontSize:11}}/></PieChart>
+            </Pie><Tooltip {...tt} formatter={(v,n)=>[v,n]}/></PieChart>
           </ResponsiveContainer>
+          <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:6}}>
+            {catData.map(e=>(
+              <div key={e.name} style={{display:'flex',alignItems:'center',gap:4,fontSize:11,color:C.text2}}>
+                <span style={{width:10,height:10,borderRadius:2,background:CAT_COLORS[e.name]||C.slate,display:'inline-block',flexShrink:0}}/>
+                {e.name.split(' ')[0]}
+              </div>
+            ))}
+          </div>
         </ChartCard>
       </Grid2>
 
       <Grid2>
-        <ChartCard title="DV Status by Legal Category" sub="DV survivors concentrated in personal/family cases">
+        <ChartCard title="DV Status by Legal Category">
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={dvByCat}><XAxis dataKey="cat" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><Tooltip {...tt}/><Bar dataKey="yes" name="DV yes" fill={C.red} stackId="a" radius={[0,0,0,0]}/><Bar dataKey="no" name="DV no" fill="#B5D4F4" stackId="a" radius={[3,3,0,0]}/></BarChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="Disability Status by Category" sub="Clients with disabilities appear most in income and housing">
+        <ChartCard title="Disability Status by Category">
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={disByCat}><XAxis dataKey="cat" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><Tooltip {...tt}/><Bar dataKey="yes" name="Disabled" fill={C.amber} stackId="a"/><Bar dataKey="no" name="Not disabled" fill={C.greenLight} stackId="a" radius={[3,3,0,0]}/></BarChart>
           </ResponsiveContainer>
@@ -107,12 +115,20 @@ export default function Dashboard() {
             </Pie><Tooltip {...tt}/></PieChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="County Distribution" sub="Predominantly Sullivan County">
-          <ResponsiveContainer width="100%" height={120}>
-            <PieChart><Pie data={countyData} cx="50%" cy="50%" outerRadius={55} dataKey="value" paddingAngle={2}>
+        <ChartCard title="County Distribution">
+          <ResponsiveContainer width="100%" height={100}>
+            <PieChart><Pie data={countyData} cx="50%" cy="50%" outerRadius={48} dataKey="value" paddingAngle={2}>
               {countyData.map((e,i)=><Cell key={i} fill={COUNTY_COLORS[e.name]||C.slate}/>)}
-            </Pie><Tooltip {...tt}/><Legend formatter={v=>v} wrapperStyle={{fontSize:10}}/></PieChart>
+            </Pie><Tooltip {...tt}/></PieChart>
           </ResponsiveContainer>
+          <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:6}}>
+            {countyData.map(e=>(
+              <div key={e.name} style={{display:'flex',alignItems:'center',gap:4,fontSize:10,color:C.text2}}>
+                <span style={{width:8,height:8,borderRadius:2,background:COUNTY_COLORS[e.name]||C.slate,display:'inline-block',flexShrink:0}}/>
+                {e.name}
+              </div>
+            ))}
+          </div>
         </ChartCard>
       </Grid3>
 

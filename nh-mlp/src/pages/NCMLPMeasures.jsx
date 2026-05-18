@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, StatCard, ChartCard, InfoBox, FAVORABLE } from '../components/ui'
+import { C, Page, Grid4, Grid2, StatCard, ChartCard, FAVORABLE } from '../components/ui'
 
 export default function NCMLPMeasures() {
   const { cases } = useApp()
@@ -39,10 +39,6 @@ export default function NCMLPMeasures() {
 
   return (
     <Page>
-      <InfoBox>
-        The NCMLP Performance Measures Handbook (2016) defines 7 standard measures all MLPs should track. Holly specifically referenced this handbook. These measures let NH MLP benchmark against national standards and make the case to funders using established methodology.
-      </InfoBox>
-
       <MeasureCard num={1} title="Percent of healthcare partner staff trained in MLP"
         formula="Staff trained in MLP in past 24 months / Total healthcare partner staff"
         value={m1staff.total ? `${Math.round(m1staff.trained/m1staff.total*100)}%` : '-'}>
