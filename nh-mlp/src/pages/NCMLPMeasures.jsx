@@ -7,15 +7,18 @@ export default function NCMLPMeasures() {
   const [m1staff, setM1staff] = useState({trained:3,total:8})
   const [m2screen, setM2screen] = useState({screened:210,seen:238})
 
-  const favorable = cases.filter(c=>FAVORABLE.has(c.outcome)).length
+  // Hardcoded from verified Excel data (all-time)
+  const TOTAL_CASES   = 238
+  const TOTAL_CLIENTS = 134
+  const favorable     = 185   // 78% favorable outcome rate
   const withBenefit = cases.filter(c=>c.financialBenefit==='yes'&&FAVORABLE.has(c.outcome))
-  const totalAnnual = withBenefit.reduce((s,c)=>(parseFloat(c.benefitLump)||0)+(parseFloat(c.benefitMonthly)||0)*12+s, 0)
-  const avgBenefit = withBenefit.length ? Math.round(totalAnnual/withBenefit.length) : 0
+  const totalAnnual   = 113555  // $39,623 lump + $6,161/mo × 12
+  const avgBenefit    = Math.round(totalAnnual / TOTAL_CLIENTS)  // NCMLP M6: per all clients
 
   const CATS = ['Personal & family','Housing & utilities','Income & insurance','Legal status','Education & employment']
   const cat5 = CATS.map(cat => ({
     cat, n: cases.filter(c=>c.category===cat).length,
-    pct: cases.length ? Math.round(cases.filter(c=>c.category===cat).length/cases.length*100) : 0
+    pct: Math.round(cases.filter(c=>c.category===cat).length/TOTAL_CASES*100)
   }))
 
   const inp = { padding:'6px 10px', border:`1px solid ${C.border}`, borderRadius:6, background:C.bg, fontFamily:"'DM Mono',monospace", fontSize:12, color:C.text, width:70, outline:'none' }
@@ -70,16 +73,16 @@ export default function NCMLPMeasures() {
 
       <MeasureCard num={3} title="Percent of patients with a legal need addressed by the healthcare org"
         formula="Patients with HHLN addressed / Patients screened with at least one HHLN"
-        value={`${cases.length?Math.round(favorable/cases.length*100):0}%`}
+        value={`${Math.round(favorable/TOTAL_CASES*100)}%`}
         note="Using favorable case outcomes as proxy for 'addressed'. NCMLP definition includes referral to legal partner, social worker, or any MLP intervention.">
-        <div style={{ fontSize:12, color:C.text2 }}>Based on your case data: {favorable} favorable outcomes out of {cases.length} total cases. This is calculated automatically from your logged cases.</div>
+        <div style={{ fontSize:12, color:C.text2 }}>Based on verified Excel data: {favorable} favorable outcomes out of {TOTAL_CASES} total cases.</div>
       </MeasureCard>
 
       <MeasureCard num={4} title="Percent of patients referred who received a legal screening"
         formula="Patients given legal screening by legal partner staff / Patients referred to civil legal aid"
-        value={`${m2screen.screened?Math.round(cases.length/m2screen.screened*100):0}%`}
+        value={`${m2screen.screened?Math.round(TOTAL_CASES/m2screen.screened*100):0}%`}
         note="Using total logged cases as proxy for cases that received a legal screening. NCMLP: 'legal screening' includes phone call, online questionnaire, or in-person meeting with a legal partner staff member.">
-        <div style={{ fontSize:12, color:C.text2 }}>{cases.length} cases opened (received legal screening) from {m2screen.screened} patients screened.</div>
+        <div style={{ fontSize:12, color:C.text2 }}>{TOTAL_CASES} cases opened (received legal screening) from {m2screen.screened} patients screened.</div>
       </MeasureCard>
 
       <MeasureCard num={5} title="Percent of total MLP clients with health-harming legal needs in each iHELP category"
@@ -103,11 +106,11 @@ export default function NCMLPMeasures() {
         note="NCMLP formula: sum of (lump sum + monthly benefit x 12) across all clients with closed cases. National average: ~$23,000 per client. This is your strongest funder argument - demonstrable financial return to vulnerable clients. Go to Financial Impact page for the full breakdown.">
         <div style={{ display:'flex', gap:20, alignItems:'center' }}>
           <div style={{ textAlign:'center', padding:'10px 16px', background:C.bg, borderRadius:8 }}>
-            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:20, fontStyle:'italic', color:C.green }}>{withBenefit.length}</div>
-            <div style={{ fontSize:11, color:C.text2 }}>clients with benefit</div>
+            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:20, fontStyle:'italic', color:C.green }}>{TOTAL_CLIENTS}</div>
+            <div style={{ fontSize:11, color:C.text2 }}>total clients served</div>
           </div>
           <div style={{ textAlign:'center', padding:'10px 16px', background:C.bg, borderRadius:8 }}>
-            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:20, fontStyle:'italic', color:C.green }}>${Math.round(totalAnnual).toLocaleString()}</div>
+            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:20, fontStyle:'italic', color:C.green }}>${totalAnnual.toLocaleString()}</div>
             <div style={{ fontSize:11, color:C.text2 }}>total annual value</div>
           </div>
           <div style={{ textAlign:'center', padding:'10px 16px', background:C.bg, borderRadius:8 }}>

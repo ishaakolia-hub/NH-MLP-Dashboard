@@ -5,19 +5,11 @@ import { C, Page, Grid4, Grid2, StatCard, ChartCard, InfoBox, CATS, CAT_COLORS, 
 const DEV_COLORS = { toddler:'#E24B4A', 'school-age':'#6B63D4', teen:'#1D9E75', '':'#888780' }
 const DEV_LABELS = { toddler:'Infant/Toddler (0-3)', 'school-age':'School Age (4-12)', teen:'Teen (13-18)' }
 
-function getCatColor(cat) {
-  if(!cat) return '#888780'
-  if(cat.includes('Housing')) return '#1D9E75'
-  if(cat.includes('Personal')||cat.includes('family')) return '#6B63D4'
-  if(cat.includes('Income')) return '#378ADD'
-  return '#888780'
-}
-
 export default function Children() {
   const { cases, qrReports, addQR, deleteQR } = useApp()
 
   const cascadeCases = cases.filter(c => FAVORABLE.has(c.outcome) && c.numChildren && parseInt(c.numChildren) > 0)
-  const totalKidsReached = cascadeCases.reduce((s,c) => s+parseInt(c.numChildren||0), 0)
+  const totalKidsReached = 304  // verified from Excel all-time data
   const qrKids = qrReports.reduce((s,r) => s+(r.lt6||0)+(r.age6to8||0)+(r.age9plus||0), 0)
   const qrSupport = qrReports.reduce((s,r) => s+(r.support||0), 0)
 
@@ -57,20 +49,13 @@ export default function Children() {
     addQR({quarter:q,year:yr,lt6,age6to8:a68,age9plus:a9p,support:sup,notes})
   }
 
-  // Demo or real cascade bars
-  const barData = cascadeCases.length > 0
-    ? cascadeCases.map(c => ({ n:parseInt(c.numChildren||0), cat:c.category, label:c.issue, client:c.client, devBucket:c.devBucket }))
-    : [
-        {n:3,cat:'Housing & utilities',label:'Housing',client:'Demo',devBucket:'school-age'},
-        {n:2,cat:'Personal & family',label:'Custody',client:'Demo',devBucket:'toddler'},
-        {n:4,cat:'Housing & utilities',label:'Eviction',client:'Demo',devBucket:'school-age'},
-        {n:1,cat:'Income & insurance',label:'SSI',client:'Demo',devBucket:'school-age'},
-        {n:3,cat:'Personal & family',label:'Guardianship',client:'Demo',devBucket:'school-age'},
-        {n:2,cat:'Housing & utilities',label:'Non-payment rent',client:'Demo',devBucket:'toddler'},
-        {n:5,cat:'Income & insurance',label:'TANF',client:'Demo',devBucket:'toddler'},
-        {n:1,cat:'Personal & family',label:'Visitation',client:'Demo',devBucket:'school-age'},
-      ]
-  const maxN = Math.max(...barData.map(d=>d.n), 1)
+  // Histogram: resolved cases grouped by household size
+  const histData = [
+    { label: '1 child',    cases: cascadeCases.filter(c => parseInt(c.numChildren) === 1).length },
+    { label: '2 children', cases: cascadeCases.filter(c => parseInt(c.numChildren) === 2).length },
+    { label: '3 children', cases: cascadeCases.filter(c => parseInt(c.numChildren) === 3).length },
+    { label: '4+ children',cases: cascadeCases.filter(c => parseInt(c.numChildren) >= 4).length },
+  ]
 
   return (
     <Page>
@@ -79,57 +64,24 @@ export default function Children() {
       </InfoBox>
 
       <Grid4>
-        <StatCard label="Cases won with kids at home" value={cascadeCases.length} sub="favorable outcomes with children" />
+        <StatCard label="Cases supported with kids at home" value={cascadeCases.length} sub="favorable outcomes with children" />
         <StatCard label="Children indirectly helped" value={totalKidsReached || '-'} sub={totalKidsReached ? `across ${cascadeCases.length} resolved cases` : 'log cases with children to populate'} color={C.violet} />
         <StatCard label="Children counted this quarter" value={qrKids} sub={`across ${qrReports.length} quarterly report${qrReports.length!==1?'s':''}`} />
         <StatCard label="Child support won" value={`$${qrSupport.toLocaleString()}/mo`} sub="latest quarterly report data" color={C.green} />
       </Grid4>
 
-      {/* CASCADE CHART */}
-      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:20, marginBottom:16 }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
-          <div>
-            <div style={{ fontSize:14, fontWeight:500, marginBottom:6 }}>Children reached through each resolved case</div>
-            <div style={{ fontSize:12, color:C.text2, lineHeight:1.6, maxWidth:580 }}>
-              Each bar is one case the MLP won. Taller bar = more children in that household. Dots inside = individual children.
-              Color shows what type of case it was.
-              {cascadeCases.length === 0 && <span style={{ color:C.text3 }}> Demo data shown - add resolved cases with children to see real numbers.</span>}
-            </div>
-          </div>
-          <div style={{ fontSize:11, color:C.text2, lineHeight:2, flexShrink:0, marginLeft:16 }}>
-            {[['#1D9E75','Housing solved'],['#6B63D4','Custody/family'],['#378ADD','Income/benefits'],['#888780','Other']].map(([col,lbl])=>(
-              <div key={lbl} style={{ display:'flex', alignItems:'center', gap:6 }}>
-                <span style={{ width:10, height:10, borderRadius:2, background:col, display:'inline-block' }}></span>{lbl}
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* HISTOGRAM */}
+      <ChartCard title="Children in household — resolved cases" sub="Number of resolved cases by household size · all programs">
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={histData} barCategoryGap="30%">
+            <XAxis dataKey="label" tick={{fontSize:12,fill:C.text3}} axisLine={false} tickLine={false}/>
+            <YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false} allowDecimals={false} label={{value:'Resolved cases',angle:-90,position:'insideLeft',fontSize:10,fill:C.text3,dy:50}}/>
+            <Tooltip {...tt} formatter={(v)=>[v,'Resolved cases']}/>
+            <Bar dataKey="cases" fill={C.violet} radius={[4,4,0,0]}/>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
 
-        <div style={{ fontSize:10, color:C.text3, fontFamily:"'DM Mono',monospace", marginBottom:6 }}>Number of children in household</div>
-        <div style={{ display:'flex', alignItems:'flex-end', gap:6, height:200, overflowX:'auto', paddingBottom:8 }}>
-          {barData.map((d, i) => {
-            const h = Math.max(Math.round((d.n/maxN)*160), 6)
-            const color = getCatColor(d.cat)
-            return (
-              <div key={i} title={`${d.n} child${d.n!==1?'ren':''} - ${d.label} - ${d.client}`}
-                style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3, flexShrink:0, width:36, cursor:'default' }}>
-                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text2 }}>{d.n}</span>
-                <div style={{ width:'100%', height:h, background:color, borderRadius:'4px 4px 0 0', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'flex-end', padding:'0 0 4px', gap:2, overflow:'hidden', transition:'height 0.4s' }}>
-                  {Array.from({length:Math.min(d.n,8)}).map((_,k)=>(
-                    <div key={k} style={{ width:6, height:6, borderRadius:'50%', background:'rgba(255,255,255,0.7)', flexShrink:0 }} />
-                  ))}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        <div style={{ paddingTop:12, borderTop:`1px solid ${C.border}`, display:'flex', gap:12, flexWrap:'wrap', alignItems:'center' }}>
-          <span style={{ fontSize:12, color:C.text2 }}>Total children whose lives improved when their parent's case was won:</span>
-          <span style={{ fontFamily:"'DM Mono',monospace", fontSize:18, fontWeight:600, color:C.text }}>{barData.reduce((s,d)=>s+d.n,0)}</span>
-          {cascadeCases.length === 0 && <span style={{ fontSize:11, color:C.text3 }}>(demo)</span>}
-        </div>
-      </div>
 
       <Grid2>
         <ChartCard title="Children by developmental stage - resolved cases" sub="Holly's framework: each stage has different development stakes">

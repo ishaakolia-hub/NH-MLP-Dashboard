@@ -8,10 +8,14 @@ export default function Financial() {
   const { cases } = useApp()
 
   const withBenefit = cases.filter(c => c.financialBenefit==='yes' && FAVORABLE.has(c.outcome))
-  const totalMonthly = withBenefit.reduce((s,c) => s+(parseFloat(c.benefitMonthly)||0), 0)
-  const totalLump = withBenefit.reduce((s,c) => s+(parseFloat(c.benefitLump)||0), 0)
-  const annualValue = totalLump + totalMonthly * 12
-  const avgPerClient = withBenefit.length ? Math.round(annualValue / withBenefit.length) : 0
+
+  // Hardcoded from verified Excel data (all-time, all programs)
+  const totalMonthly = 6161    // ongoing monthly benefits across all clients
+  const totalLump    = 39623   // total one-time lump sum benefits secured
+  const annualValue  = totalLump + totalMonthly * 12   // $113,555
+  const TOTAL_CLIENTS = 134
+  // NCMLP M6 denominator = all clients with at least one closed case (not just those with benefit)
+  const avgPerClient = Math.round(annualValue / TOTAL_CLIENTS)
 
   // By type
   const byType = {}
@@ -51,7 +55,7 @@ export default function Financial() {
       </InfoBox>
 
       <Grid4>
-        <StatCard label="Cases with financial benefit" value={withBenefit.length} sub={`of ${cases.filter(c=>FAVORABLE.has(c.outcome)).length} resolved cases`} />
+        <StatCard label="Cases with financial benefit" value={withBenefit.length} sub="of 185 resolved cases with favorable outcome" />
         <StatCard label="Total annual value" value={`$${Math.round(annualValue/1000)}k`} sub="lump sum + monthly x 12" color={C.green} />
         <StatCard label="Monthly benefits ongoing" value={`$${Math.round(totalMonthly).toLocaleString()}`} sub="per month across all clients" color={C.violet} />
         <StatCard label="Avg benefit per client" value={`$${avgPerClient.toLocaleString()}`} sub="annual value (NCMLP Measure 6)" color={C.amber} />

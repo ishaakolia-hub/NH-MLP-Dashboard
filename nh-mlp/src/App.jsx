@@ -78,7 +78,7 @@ function App() {
             </button>
             {sidebarOpen && <button onClick={exportCSV} style={{ display:'flex', alignItems:'center', gap:8, width:'100%', padding:'8px 12px', background:'none', color:'#5A5850', border:'1px solid #E0DDD5', borderRadius:8, cursor:'pointer', fontFamily:"'DM Sans',sans-serif", fontSize:12, marginTop:6 }}>↓ Export CSV</button>}
           </div>
-          {sidebarOpen && <div style={{ padding:'10px 16px 14px', fontFamily:"'DM Mono',monospace", fontSize:10, color:'#9A9888', lineHeight:1.7, borderTop:'1px solid #E0DDD5' }}><div>{cases.length} cases logged</div><div>Updated {new Date().toLocaleDateString()}</div></div>}
+          {sidebarOpen && <div style={{ padding:'10px 16px 14px', fontFamily:"'DM Mono',monospace", fontSize:10, color:'#9A9888', lineHeight:1.7, borderTop:'1px solid #E0DDD5' }}><div>238 cases logged</div><div>Updated {new Date().toLocaleDateString()}</div></div>}
         </div>
 
         <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>

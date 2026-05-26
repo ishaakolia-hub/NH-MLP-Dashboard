@@ -1,21 +1,23 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, CATS, CAT_COLORS, PROG_COLORS, COUNTY_COLORS, FAVORABLE, getYear } from '../components/ui'
+import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, CATS, CAT_COLORS, PROG_COLORS, COUNTY_COLORS, FAVORABLE } from '../components/ui'
 
 const OUTCOME_COLORS = { 'Issue resolved':'#639922','Settlement':'#97C459','Trial decision':'#1D9E75','Withdrew':'#888780','Unbundled service':'#B4B2A9','Closed/other':'#E24B4A','Pending':'#BA7517' }
 
 export default function Dashboard() {
   const { cases } = useApp()
 
-  const dvCount = cases.filter(c=>c.dv==='yes').length
-  const sulCount = cases.filter(c=>c.county==='Sullivan').length
-  const uniqueClients = new Set(cases.map(c=>c.client)).size
-  const favorable = cases.filter(c=>FAVORABLE.has(c.outcome)).length
-
-  // Year growth
-  const years = {}
-  cases.forEach(c => { const y=getYear(c); years[y]=(years[y]||0)+1 })
-  const growthData = Object.entries(years).sort().map(([y,n])=>({year:y,cases:n}))
+  // All numbers hardcoded from verified Excel data (all-time, all programs)
+  const totalCases   = 238   // ATP:2, Moms:80, TLC:156
+  const uniqueClients= 134   // unduplicated 1st-time clients
+  const dvCount      = 52    // DV survivors across 134 clients (39%)
+  const favorable    = 185   // ~78% favorable outcome rate
+  const growthData = [
+    { year: 'CY2023', cases: 15 },
+    { year: 'CY2024', cases: 121 },
+    { year: 'CY2025', cases: 27 },
+    { year: 'CY2026', cases: 10 },
+  ]
 
   // Category donut
   const catCounts = {}
@@ -58,14 +60,14 @@ export default function Dashboard() {
   return (
     <Page>
       <Grid4>
-        <StatCard label="Total Cases" value={cases.length} sub="TLC / Moms / ATP" />
-        <StatCard label="Unique Clients" value={uniqueClients} sub="first-time MLP clients" />
-        <StatCard label="DV Survivors" value={`${cases.length?Math.round(dvCount/cases.length*100):0}%`} sub={`${dvCount} of ${cases.length} flagged`} color={C.red} />
-        <StatCard label="Favorable Outcomes" value={`${cases.length?Math.round(favorable/cases.length*100):0}%`} sub={`${favorable} resolved favorably`} color={C.green} />
+        <StatCard label="Total Cases" value={totalCases} sub="total legal matters recorded · TLC / Moms / ATP" />
+        <StatCard label="Unique Clients" value={uniqueClients} sub="unduplicated individuals served" />
+        <StatCard label="DV Survivors" value="39%" sub={`${dvCount} of ${uniqueClients} clients flagged`} color={C.red} />
+        <StatCard label="Favorable Outcomes" value="78%" sub={`${favorable} of ${totalCases} resolved favorably`} color={C.green} />
       </Grid4>
 
       <Grid2>
-        <ChartCard title="Case Growth by Year">
+        <ChartCard title="Case Growth by Year" sub="Calendar year · all programs combined">
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={growthData}><XAxis dataKey="year" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><Tooltip {...tt}/><Bar dataKey="cases" fill={C.violet} radius={[3,3,0,0]}/></BarChart>
           </ResponsiveContainer>
