@@ -1,9 +1,9 @@
 import { C, Page } from '../components/ui'
 
 const TIERS = [
-  { key:'Grant-dependent',   label:'PRIMARILY PHILANTHROPIC / GRANT-DEPENDENT — LIKE NH' },
-  { key:'Mixed/sustainable', label:'MIXED MODEL — TRANSITIONING TOWARD SUSTAINABILITY' },
-  { key:'Mature/diversified',label:'MATURE / DIVERSIFIED — THE TARGET MODEL' },
+  { key:'Grant-dependent',   label:'PRIMARILY PHILANTHROPIC / GRANT-DEPENDENT (LIKE NH)' },
+  { key:'Mixed/sustainable', label:'MIXED MODEL, TRANSITIONING TOWARD SUSTAINABILITY' },
+  { key:'Mature/diversified',label:'MATURE / DIVERSIFIED, THE TARGET MODEL' },
 ]
 
 const STABILITY = [
@@ -27,7 +27,7 @@ const STABILITY = [
     bullets:[
       'Launched May 2022 on COVID relief funds',
       'Only known MLP in rural South Georgia',
-      'Actively seeking sustainable funding — no solution yet',
+      'Actively seeking sustainable funding, no solution yet',
       'FQHC partner but HRSA funds not yet redirected to legal',
     ],
   },
@@ -64,7 +64,7 @@ const STABILITY = [
       'First MLP in a dental clinic setting nationally',
       'Legal Services of NW Minnesota (LSC-funded) as partner',
       'Community "Know Your Rights" sessions expand reach',
-      'LSC exposure — at risk from proposed 2026 defunding',
+      'LSC exposure, at risk from proposed 2026 defunding',
     ],
   },
   {
@@ -75,7 +75,7 @@ const STABILITY = [
     bullets:[
       'Joint venture: SIH hospital + Land of Lincoln legal aid',
       '~$318K annual operating cost, hospital co-funds',
-      '$8.1M in medical debt relieved — strong ROI argument',
+      '$8.1M in medical debt relieved, strong ROI argument',
       'ROI model used as national sustainability benchmark',
     ],
   },
@@ -128,7 +128,7 @@ export default function Compare() {
   return (
     <Page>
       <div style={{ marginBottom:8 }}>
-        <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>Funding stability — NH in national context</div>
+        <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>Funding stability: NH in national context</div>
         <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginBottom:28 }}>Based on funding model benchmarks. The target path: grant-dependent → mixed → mature/diversified.</div>
 
         {TIERS.map(({ key, label }) => (
@@ -152,7 +152,7 @@ export default function Compare() {
                     {/* Bullets */}
                     <ul style={{ margin:'0 0 16px 0', padding:0, listStyle:'none' }}>
                       {s.bullets.map(b => (
-                        <li key={b} style={{ fontSize:12, color:C.text2, lineHeight:1.7, paddingLeft:0 }}>— {b}</li>
+                        <li key={b} style={{ fontSize:12, color:C.text2, lineHeight:1.7, paddingLeft:12, listStyle:'disc' }}>{b}</li>
                       ))}
                     </ul>
 

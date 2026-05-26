@@ -134,7 +134,7 @@ export default function Dashboard() {
         </ChartCard>
       </Grid3>
 
-      <ChartCard title="Top Legal Issues" sub="Leading case types across all programs" full style={{marginBottom:0}}>
+<ChartCard title="Top Legal Issues" sub="Leading case types across all programs" full style={{marginBottom:0}}>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={topIssues} layout="vertical"><XAxis type="number" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis dataKey="name" type="category" tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false} width={160}/><Tooltip {...tt}/><Bar dataKey="count" fill={C.violet} radius={[0,3,3,0]}/></BarChart>
         </ResponsiveContainer>

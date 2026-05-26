@@ -71,7 +71,7 @@ export default function Children() {
       </Grid4>
 
       {/* HISTOGRAM */}
-      <ChartCard title="Children in household — resolved cases" sub="Number of resolved cases by household size · all programs">
+      <ChartCard title="Children in household: resolved cases" sub="Number of resolved cases by household size · all programs">
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={histData} barCategoryGap="30%">
             <XAxis dataKey="label" tick={{fontSize:12,fill:C.text3}} axisLine={false} tickLine={false}/>
