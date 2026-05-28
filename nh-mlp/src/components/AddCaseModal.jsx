@@ -39,12 +39,12 @@ export default function AddCaseModal({ onClose, onSave, totalCases }) {
   const inp = { width:'100%', padding:'8px 11px', border:`1px solid ${C.border}`, borderRadius:7, background:C.bg, color:C.text, fontFamily:"'DM Sans',sans-serif", fontSize:13, outline:'none', boxSizing:'border-box' }
 
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(26,25,22,0.55)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(12,18,30,0.7)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:C.surface, borderRadius:14, width:680, maxHeight:'92vh', overflowY:'auto', boxShadow:'0 24px 64px rgba(0,0,0,0.28)' }}>
         {/* Header */}
         <div style={{ padding:'22px 28px 18px', borderBottom:`1px solid ${C.border}`, display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
           <div>
-            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:22, fontStyle:'italic', marginBottom:3 }}>Add New Case</div>
+            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:22,  marginBottom:3 }}>Add New Case</div>
             <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3 }}>Charts update instantly after saving</div>
           </div>
           <button onClick={onClose} style={{ border:`1px solid ${C.border}`, background:'none', borderRadius:'50%', width:30, height:30, cursor:'pointer', fontSize:16, color:C.text2 }}>x</button>
@@ -95,8 +95,8 @@ export default function AddCaseModal({ onClose, onSave, totalCases }) {
 
           {/* Inclusion Criteria */}
           <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, textTransform:'uppercase', letterSpacing:'0.08em', borderBottom:`1px solid ${C.border}`, paddingBottom:8, marginBottom:16, marginTop:20 }}>Inclusion Criteria</div>
-          <div style={{ background:C.violetPale, border:'1px solid #C8C4F8', borderRadius:7, padding:'10px 14px', fontSize:12, color:C.violet, marginBottom:14, lineHeight:1.5 }}>
-            NH Civil Legal Issue - Client age 12-18+ - One of TLC / Moms / ATP - Child custody/guardianship (age under 12)
+          <div style={{ background:C.violetPale, border:'1px solid #3A4A90', borderRadius:7, padding:'10px 14px', fontSize:12, color:C.violet, marginBottom:14, lineHeight:1.5 }}>
+            NH Civil Legal Issue - One of TLC / Moms / ATP - Adult clients (age 12+) or child custody/guardianship cases (children under 12)
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:14, marginBottom:14 }}>
             <F label="Client Age"><input type="number" style={inp} placeholder="e.g. 34" value={form.clientAge} onChange={e=>set('clientAge',e.target.value)} /></F>

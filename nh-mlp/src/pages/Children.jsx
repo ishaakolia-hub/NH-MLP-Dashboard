@@ -1,6 +1,6 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, StatCard, ChartCard, InfoBox, CATS, CAT_COLORS, FAVORABLE } from '../components/ui'
+import { C, Page, Grid4, Grid2, StatCard, ChartCard, InfoBox, CATS, CAT_COLORS, FAVORABLE, TT_STYLE } from '../components/ui'
 
 const DEV_COLORS = { toddler:'#E24B4A', 'school-age':'#6B63D4', teen:'#1D9E75', '':'#888780' }
 const DEV_LABELS = { toddler:'Infant/Toddler (0-3)', 'school-age':'School Age (4-12)', teen:'Teen (13-18)' }
@@ -31,12 +31,12 @@ export default function Children() {
   const a68total = qrReports.reduce((s,r)=>s+(r.age6to8||0),0)
   const a9total = qrReports.reduce((s,r)=>s+(r.age9plus||0),0)
   const qrAgeData = [
-    { name:'Under 6\n(Holly: highest dev risk)', count:lt6total },
+    { name:'Under 6\n(highest dev risk)', count:lt6total },
     { name:'6-8 years', count:a68total },
     { name:'9+ years', count:a9total },
   ]
 
-  const tt = { contentStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,fontSize:12} }
+  const tt = TT_STYLE
 
   const handleAddQR = () => {
     const q = prompt('Quarter (e.g. Q1, Q2, Q3, Q4):'); if(!q) return
@@ -60,31 +60,33 @@ export default function Children() {
   return (
     <Page>
       <InfoBox>
-        The NH MLP serves adult clients with civil legal problems. It does not take cases for children under 12. But many clients have young children living with them. When the MLP wins a case, every child in that household is stabilized too. This page tracks that ripple effect.
+        The DH MLP supports low-income clients facing civil legal issues in NH who are pregnant or parenting a child under the age of 12. When a client receives support through the MLP, the impact often extends beyond the individual, supporting every child within that household as well. This page highlights that broader ripple effect.
       </InfoBox>
 
       <Grid4>
-        <StatCard label="Cases supported with kids at home" value={cascadeCases.length} sub="favorable outcomes with children" />
-        <StatCard label="Children indirectly helped" value={totalKidsReached || '-'} sub={totalKidsReached ? `across ${cascadeCases.length} resolved cases` : 'log cases with children to populate'} color={C.violet} />
+        <StatCard label="Clients supported with kids at home" value={134} sub="all clients · program serves parents of children under 12" />
+        <StatCard label="Children reached" value={304} sub="across all programs, inception through FY25-26" color={C.violet} />
         <StatCard label="Children counted this quarter" value={qrKids} sub={`across ${qrReports.length} quarterly report${qrReports.length!==1?'s':''}`} />
         <StatCard label="Child support won" value={`$${qrSupport.toLocaleString()}/mo`} sub="latest quarterly report data" color={C.green} />
       </Grid4>
 
       {/* HISTOGRAM */}
       <ChartCard title="Children in household: resolved cases" sub="Number of resolved cases by household size · all programs">
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={histData} barCategoryGap="30%">
-            <XAxis dataKey="label" tick={{fontSize:12,fill:C.text3}} axisLine={false} tickLine={false}/>
-            <YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false} allowDecimals={false} label={{value:'Resolved cases',angle:-90,position:'insideLeft',fontSize:10,fill:C.text3,dy:50}}/>
+        <ResponsiveContainer width="100%" height={160}>
+          <BarChart data={histData} barCategoryGap="20%" margin={{top:24,right:16,left:0,bottom:0}}>
+            <XAxis dataKey="label" tick={{fontSize:13,fill:C.text2,fontFamily:"'DM Sans',sans-serif"}} axisLine={false} tickLine={false}/>
+            <YAxis hide/>
             <Tooltip {...tt} formatter={(v)=>[v,'Resolved cases']}/>
-            <Bar dataKey="cases" fill={C.violet} radius={[4,4,0,0]}/>
+            <Bar dataKey="cases" radius={[6,6,0,0]}>
+              {histData.map((e,i)=><Cell key={i} fill={[C.violet,C.blue,C.green,C.amber][i]||C.violet}/>)}
+              <LabelList dataKey="cases" position="top" style={{fontSize:14,fontWeight:600,fontFamily:"'DM Sans',sans-serif",fill:C.text}}/>
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
 
-
-      <Grid2>
-        <ChartCard title="Children by developmental stage - resolved cases" sub="Holly's framework: each stage has different development stakes">
+      <Grid2 style={{ marginTop:16 }}>
+        <ChartCard title="Children by developmental stage - resolved cases" sub="Framework: each stage has different development stakes">
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={devData}><XAxis dataKey="name" tick={{fontSize:10,fill:C.text3}} axisLine={false} tickLine={false}/><YAxis tick={{fontSize:11,fill:C.text3}} axisLine={false} tickLine={false}/><Tooltip {...tt} formatter={(v)=>[v,'Children']}/><Bar dataKey="count" radius={[4,4,0,0]}>
               {devData.map((e,i)=><Cell key={i} fill={DEV_COLORS[e.bucket]||C.slate}/>)}

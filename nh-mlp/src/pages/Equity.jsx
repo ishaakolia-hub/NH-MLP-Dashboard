@@ -1,10 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, FAVORABLE } from '../components/ui'
+import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, FAVORABLE, TT_STYLE } from '../components/ui'
 
 export default function Equity() {
   const { cases } = useApp()
-  const tt = { contentStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,fontSize:12} }
+  const tt = TT_STYLE
 
   // Veterans
   const vets = cases.filter(c=>c.veteranStatus==='yes')

@@ -118,10 +118,16 @@ const STABILITY = [
 ]
 
 const BADGE_STYLES = {
-  violet: { background:C.violetPale, color:C.violet },
-  green:  { background:'#D4F2E8',    color:C.green  },
-  amber:  { background:'#FEF3DC',    color:C.amber  },
-  red:    { background:'#FDEAEA',    color:C.red    },
+  violet: { background:C.violetPale,  color:C.violet },
+  green:  { background:'#E6F5EF',     color:C.green  },
+  amber:  { background:'#FEF3DC',     color:C.amber  },
+  red:    { background:'#FDEAEA',     color:C.red    },
+}
+
+const TIER_COLORS = {
+  'Grant-dependent':   { bg:'#FEF3DC', border:'#F5A623', text:'#9A6400' },
+  'Mixed/sustainable': { bg:'#E8F5FF', border:'#4A9EE0', text:'#1A6498' },
+  'Mature/diversified':{ bg:'#E6F5EF', border:'#2ECC71', text:'#1A7A46' },
 }
 
 export default function Compare() {
@@ -131,49 +137,68 @@ export default function Compare() {
         <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>Funding stability: NH in national context</div>
         <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, marginBottom:28 }}>Based on funding model benchmarks. The target path: grant-dependent → mixed → mature/diversified.</div>
 
-        {TIERS.map(({ key, label }) => (
-          <div key={key} style={{ marginBottom:36 }}>
-            <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, textTransform:'uppercase', letterSpacing:'0.08em', borderBottom:`1px solid ${C.border}`, paddingBottom:8, marginBottom:20 }}>{label}</div>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}>
-              {STABILITY.filter(s => s.tier === key).map(s => {
-                const badge = BADGE_STYLES[s.modelVariant] || BADGE_STYLES.violet
-                return (
-                  <div key={s.name}>
-                    {/* Name row */}
-                    <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:6 }}>
-                      <span style={{ width:10, height:10, borderRadius:'50%', background:s.dot, display:'inline-block', flexShrink:0, marginTop:2 }}/>
-                      <span style={{ fontSize:13, fontWeight:600, color:s.isNH ? C.violet : C.text }}>{s.name}</span>
-                      {s.nameNote && <span style={{ fontSize:11, color:C.text3 }}>{s.nameNote}</span>}
-                    </div>
+        {TIERS.map(({ key, label }) => {
+          const tc = TIER_COLORS[key]
+          return (
+            <div key={key} style={{ marginBottom:32 }}>
+              {/* Tier header band */}
+              <div style={{ background:tc.bg, border:`1px solid ${tc.border}`, borderRadius:8, padding:'8px 14px', marginBottom:12 }}>
+                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, fontWeight:700, color:tc.text, textTransform:'uppercase', letterSpacing:'0.1em' }}>{label}</span>
+              </div>
 
-                    {/* Model badge */}
-                    <div style={{ display:'inline-block', padding:'2px 8px', borderRadius:4, fontFamily:"'DM Mono',monospace", fontSize:10, fontWeight:500, marginBottom:12, ...badge }}>{s.model}</div>
+              {/* MLP rows */}
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {STABILITY.filter(s => s.tier === key).map(s => {
+                  const badge = BADGE_STYLES[s.modelVariant] || BADGE_STYLES.violet
+                  return (
+                    <div key={s.name} style={{ display:'grid', gridTemplateColumns:'200px 1fr 200px', gap:0, background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, overflow:'hidden' }}>
 
-                    {/* Bullets */}
-                    <ul style={{ margin:'0 0 16px 0', padding:0, listStyle:'none' }}>
-                      {s.bullets.map(b => (
-                        <li key={b} style={{ fontSize:12, color:C.text2, lineHeight:1.7, paddingLeft:12, listStyle:'disc' }}>{b}</li>
-                      ))}
-                    </ul>
-
-                    {/* Risk bar */}
-                    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                      <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3, flexShrink:0 }}>Stability risk</div>
-                      <div style={{ flex:1, height:5, background:C.bg2, borderRadius:3, overflow:'hidden' }}>
-                        <div style={{ width:`${s.risk * 100}%`, height:'100%', background:s.bar, borderRadius:3, transition:'width 0.6s' }}/>
+                      {/* Left: identity */}
+                      <div style={{ padding:'14px 16px', borderRight:`1px solid ${C.border}` }}>
+                        <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:6 }}>
+                          <span style={{ width:9, height:9, borderRadius:'50%', background:s.dot, display:'inline-block', flexShrink:0 }}/>
+                          <span style={{ fontSize:13, fontWeight:600, color:s.isNH ? C.violet : C.text, lineHeight:1.3 }}>{s.name}</span>
+                        </div>
+                        {s.nameNote && (
+                          <div style={{ fontSize:10, color:C.violet,  marginBottom:8, paddingLeft:16 }}>{s.nameNote}</div>
+                        )}
+                        <div style={{ paddingLeft:16 }}>
+                          <div style={{ display:'inline-block', padding:'2px 8px', borderRadius:4, fontFamily:"'DM Mono',monospace", fontSize:10, fontWeight:500, ...badge }}>{s.model}</div>
+                        </div>
                       </div>
-                      <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:s.bar, flexShrink:0, minWidth:60, textAlign:'right' }}>{s.riskLabel}</div>
+
+                      {/* Middle: bullets */}
+                      <div style={{ padding:'14px 18px' }}>
+                        <ul style={{ margin:0, padding:0, listStyle:'none', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4px 16px' }}>
+                          {s.bullets.map(b => (
+                            <li key={b} style={{ fontSize:12, color:C.text2, lineHeight:1.6, display:'flex', gap:6, alignItems:'flex-start' }}>
+                              <span style={{ color:C.text3, flexShrink:0, marginTop:2 }}>–</span>
+                              <span>{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Right: risk */}
+                      <div style={{ padding:'14px 16px', borderLeft:`1px solid ${C.border}`, display:'flex', flexDirection:'column', justifyContent:'center', gap:8 }}>
+                        <div style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:C.text3 }}>Stability risk</div>
+                        <div style={{ height:6, background:C.bg2, borderRadius:3, overflow:'hidden' }}>
+                          <div style={{ width:`${s.risk * 100}%`, height:'100%', background:s.bar, borderRadius:3, transition:'width 0.6s' }}/>
+                        </div>
+                        <div style={{ fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:600, color:s.bar }}>{s.riskLabel}</div>
+                      </div>
+
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Model comparison table */}
-      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:20 }}>
+      <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:20, marginTop:8 }}>
         <div style={{ fontSize:13, fontWeight:500, marginBottom:14 }}>What the mature models did to get there</div>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
           {[

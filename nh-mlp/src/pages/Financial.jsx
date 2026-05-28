@@ -1,8 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LineChart, Line, CartesianGrid } from 'recharts'
 import { useApp } from '../App'
-import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, InfoBox, FAVORABLE } from '../components/ui'
+import { C, Page, Grid4, Grid2, Grid3, StatCard, ChartCard, InfoBox, FAVORABLE, TT_STYLE } from '../components/ui'
 
-const BENEFIT_COLORS = { SSI:'#6B63D4', SSD:'#AFA9EC', SNAP:'#1D9E75', Medicaid:'#378ADD', Medicare:'#4A9FE0', TANF:'#BA7517', LIHEAP:'#D85A30', 'Child support':'#E24B4A', 'VA benefits':'#639922', 'Housing subsidies':'#97C459', Unemployment:'#888780', Other:'#B4B2A9' }
+const BENEFIT_COLORS = { SSI:'#076B5E', SSD:'#0B8F7E', SNAP:'#2AB8A4', Medicaid:'#44C8B8', Medicare:'#6DD4C8', TANF:'#088070', LIHEAP:'#0A9888', 'Child support':'#2AB0A0', 'VA benefits':'#50C8B8', 'Housing subsidies':'#80D8CE', Unemployment:'#64748B', Other:'#94A3B8' }
 
 export default function Financial() {
   const { cases } = useApp()
@@ -46,13 +46,55 @@ export default function Financial() {
     return { name: cat.split(' ')[0], annual: Math.round(l+m*12) }
   }).filter(d=>d.annual>0)
 
-  const tt = { contentStyle:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:7,fontSize:12}, formatter:(v,n)=>[`$${v.toLocaleString()}`,n] }
+  const tt = { ...TT_STYLE, formatter:(v,n)=>[`$${v.toLocaleString()}`,n] }
 
   return (
     <Page>
       <InfoBox color="green">
         NCMLP Measure 6: Average financial benefit received by a MLP client. Includes lump sum payments + monthly benefits x 12 months. This is the ROI argument to funders - every dollar invested in MLP legal services returns measurable financial benefit to clients.
       </InfoBox>
+
+      {/* Hero — financial impact module */}
+      <div style={{ background:'#FFFFFF', border:'1px solid #E2E8F0', borderRadius:12, padding:'18px 22px', marginBottom:10, boxShadow:'0 1px 3px rgba(0,0,0,0.07)' }}>
+        <div style={{ fontSize:10, fontWeight:700, color:C.text3, textTransform:'uppercase', letterSpacing:'0.14em', marginBottom:10 }}>
+          Total financial benefit secured — all programs, since inception
+        </div>
+        <div style={{ display:'flex', alignItems:'stretch' }}>
+
+          {/* LEFT: Hero metric — vertically centered so dead space distributes evenly */}
+          <div style={{ flex:'1 1 auto', paddingRight:22, display:'flex', flexDirection:'column', justifyContent:'center' }}>
+            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:72, color:C.green, lineHeight:1, letterSpacing:'-0.02em' }}>$414,360</div>
+            <div style={{ fontSize:12, color:C.text2, marginTop:8, fontWeight:500 }}>
+              cumulative · TLC + Moms + ATP · FY23-24 through FY25-26 YTD
+            </div>
+          </div>
+
+          {/* RIGHT: Compact metrics panel */}
+          <div style={{ flex:'0 0 264px', borderLeft:'1px solid #E2E8F0', paddingLeft:22 }}>
+            <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:8, paddingBottom:8, borderBottom:'1px solid #F1F5F9' }}>
+              <div>
+                <div style={{ fontSize:9, fontWeight:700, color:C.text3, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:2 }}>Avg per client</div>
+                <div style={{ fontSize:10, color:C.text3 }}>50 clients with financial benefit</div>
+              </div>
+              <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:24, color:C.amber, lineHeight:1 }}>${Math.round(414360/50).toLocaleString()}</div>
+            </div>
+            <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+              {[
+                { program:'TLC',  clients:15, total:79200,  color:C.teal   },
+                { program:'Moms', clients:35, total:335160, color:C.purple },
+                { program:'ATP',  clients:0,  total:0,      color:C.slate  },
+              ].map(({ program, clients, total, color }) => (
+                <div key={program} style={{ display:'flex', alignItems:'center', gap:10, padding:'4px 0 4px 8px', borderLeft:`2px solid ${color}` }}>
+                  <div style={{ flex:'0 0 36px', fontSize:10, fontWeight:700, color:C.text, textTransform:'uppercase', letterSpacing:'0.08em' }}>{program}</div>
+                  <div style={{ flex:'1 1 auto', fontFamily:"'DM Mono',monospace", fontSize:12, color, fontWeight:600 }}>${total.toLocaleString()}</div>
+                  <div style={{ fontSize:10, color:C.text3 }}>{clients} client{clients!==1?'s':''}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       <Grid4>
         <StatCard label="Cases with financial benefit" value={withBenefit.length} sub="of 185 resolved cases with favorable outcome" />
@@ -135,7 +177,7 @@ export default function Financial() {
             </tbody>
           </table>
         </div>
-        <div style={{ marginTop:12, padding:'10px 14px', background:'#D4F2E8', borderRadius:8, fontSize:12, color:C.green, lineHeight:1.6 }}>
+        <div style={{ marginTop:12, padding:'10px 14px', background:C.greenLight, borderRadius:8, fontSize:12, color:C.green, lineHeight:1.6 }}>
           NCMLP formula: Total financial benefit = sum of (lump sum + monthly benefit x 12) across all closed cases with favorable outcomes. The national average for MLP programs is ~$23,000 per client. Use this to build the ROI case for continued funding.
         </div>
       </div>
