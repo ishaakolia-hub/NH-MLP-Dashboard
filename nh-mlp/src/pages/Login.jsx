@@ -42,17 +42,7 @@ export default function Login({ onSwitch }) {
         animation: 'fadeSlideUp 0.4s cubic-bezier(0.16,1,0.3,1) forwards',
       }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{
-            width: 50, height: 50,
-            background: '#1B2334',
-            borderRadius: 12,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 14px',
-            fontSize: 22,
-          }}>
-            ⚖
-          </div>
-          <div style={{ fontSize: 9, fontWeight: 700, color: '#0D9488', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 7 }}>
+<div style={{ fontSize: 9, fontWeight: 700, color: '#0D9488', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 7 }}>
             NH Medical-Legal Partnership
           </div>
           <div style={{ fontFamily: "'Instrument Serif',serif", fontSize: 26, color: '#1A202C', lineHeight: 1.2 }}>

@@ -55,44 +55,87 @@ export default function Financial() {
       </InfoBox>
 
       {/* Hero — financial impact module */}
-      <div style={{ background:'#FFFFFF', border:'1px solid #E2E8F0', borderRadius:12, padding:'18px 22px', marginBottom:10, boxShadow:'0 1px 3px rgba(0,0,0,0.07)' }}>
-        <div style={{ fontSize:10, fontWeight:700, color:C.text3, textTransform:'uppercase', letterSpacing:'0.14em', marginBottom:10 }}>
-          Total financial benefit secured — all programs, since inception
+      <div style={{ background:'#FAFBFC', border:'1px solid #DDE3EC', borderRadius:10, marginBottom:10, overflow:'hidden', boxShadow:'0 1px 4px rgba(0,0,0,0.06)' }}>
+
+        {/* Header strip */}
+        <div style={{ background:'#F1F5F9', borderBottom:'1px solid #DDE3EC', padding:'7px 20px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <span style={{ fontFamily:"'DM Mono',monospace", fontSize:9, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'0.13em' }}>
+            Total Financial Benefit Secured · All Programs · Since Inception
+          </span>
+          <span style={{ fontFamily:"'DM Mono',monospace", fontSize:9, fontWeight:500, color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.10em' }}>
+            NCMLP Measure 6
+          </span>
         </div>
-        <div style={{ display:'flex', alignItems:'stretch' }}>
 
-          {/* LEFT: Hero metric — vertically centered so dead space distributes evenly */}
-          <div style={{ flex:'1 1 auto', paddingRight:22, display:'flex', flexDirection:'column', justifyContent:'center' }}>
-            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:72, color:C.green, lineHeight:1, letterSpacing:'-0.02em' }}>$414,360</div>
-            <div style={{ fontSize:12, color:C.text2, marginTop:8, fontWeight:500 }}>
-              cumulative · TLC + Moms + ATP · FY23-24 through FY25-26 YTD
+        <div style={{ display:'flex', alignItems:'stretch', flexWrap:'wrap' }}>
+
+          {/* LEFT: Primary metric */}
+          <div style={{ flex:'0 0 auto', padding:'20px 28px 20px 20px', borderRight:'1px solid #DDE3EC', display:'flex', flexDirection:'column', justifyContent:'center', minWidth:200 }}>
+            <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:66, color:C.green, lineHeight:1, letterSpacing:'-0.02em' }}>
+              $414,360
+            </div>
+            <div style={{ marginTop:8, fontSize:11, color:'#64748B', lineHeight:1.55 }}>
+              cumulative · TLC + Moms + ATP<br/>FY23–24 through FY25–26 YTD
             </div>
           </div>
 
-          {/* RIGHT: Compact metrics panel */}
-          <div style={{ flex:'0 0 264px', borderLeft:'1px solid #E2E8F0', paddingLeft:22 }}>
-            <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:8, paddingBottom:8, borderBottom:'1px solid #F1F5F9' }}>
-              <div>
-                <div style={{ fontSize:9, fontWeight:700, color:C.text3, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:2 }}>Avg per client</div>
-                <div style={{ fontSize:10, color:C.text3 }}>50 clients with financial benefit</div>
-              </div>
-              <div style={{ fontFamily:"'Instrument Serif',serif", fontSize:24, color:C.amber, lineHeight:1 }}>${Math.round(414360/50).toLocaleString()}</div>
-            </div>
-            <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
-              {[
-                { program:'TLC',  clients:15, total:79200,  color:C.teal   },
-                { program:'Moms', clients:35, total:335160, color:C.purple },
-                { program:'ATP',  clients:0,  total:0,      color:C.slate  },
-              ].map(({ program, clients, total, color }) => (
-                <div key={program} style={{ display:'flex', alignItems:'center', gap:10, padding:'4px 0 4px 8px', borderLeft:`2px solid ${color}` }}>
-                  <div style={{ flex:'0 0 36px', fontSize:10, fontWeight:700, color:C.text, textTransform:'uppercase', letterSpacing:'0.08em' }}>{program}</div>
-                  <div style={{ flex:'1 1 auto', fontFamily:"'DM Mono',monospace", fontSize:12, color, fontWeight:600 }}>${total.toLocaleString()}</div>
-                  <div style={{ fontSize:10, color:C.text3 }}>{clients} client{clients!==1?'s':''}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* RIGHT: Formula + program table */}
+          <div style={{ flex:'1 1 280px', padding:'16px 20px', display:'flex', flexDirection:'column', gap:12 }}>
 
+            {/* Formula row */}
+            <div style={{ display:'flex', alignItems:'center', flexWrap:'wrap', gap:6, padding:'9px 14px', background:'rgba(39,103,73,0.05)', border:'1px solid rgba(39,103,73,0.13)', borderRadius:7 }}>
+              <span style={{ fontFamily:"'DM Mono',monospace", fontSize:8, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'0.13em', marginRight:4 }}>Avg / client (M6)</span>
+              <span style={{ fontFamily:"'DM Mono',monospace", fontSize:13, color:C.green, fontWeight:500 }}>$414,360</span>
+              <span style={{ fontSize:12, color:'#94A3B8', fontWeight:300 }}>÷</span>
+              <span style={{ fontFamily:"'DM Mono',monospace", fontSize:13, color:'#64748B' }}>50 clients</span>
+              <span style={{ fontSize:12, color:'#94A3B8', fontWeight:300 }}>=</span>
+              <span style={{ fontFamily:"'Instrument Serif',serif", fontSize:22, color:C.amber, lineHeight:1 }}>$8,287</span>
+              <span style={{ fontSize:10, color:'#94A3B8' }}>avg benefit per client</span>
+            </div>
+
+            {/* Program breakdown table */}
+            <table style={{ width:'100%', borderCollapse:'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom:'1.5px solid #E2E8F0' }}>
+                  {['Program','Total Benefit','Clients','Avg / Client'].map((h,i) => (
+                    <th key={h} style={{ fontFamily:"'DM Mono',monospace", fontSize:8, fontWeight:700, color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.12em', padding:'0 0 6px', textAlign: i===0 ? 'left' : 'right', whiteSpace:'nowrap' }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { program:'TLC',  color:C.blue1,  total:79200,  clients:15 },
+                  { program:'Moms', color:C.purple, total:335160, clients:35 },
+                  { program:'ATP',  color:'#94A3B8', total:0,     clients:0  },
+                ].map(({ program, color, total, clients }) => {
+                  const avg = clients > 0 ? Math.round(total / clients) : null
+                  return (
+                    <tr key={program} style={{ borderBottom:'1px solid #F1F5F9' }}>
+                      <td style={{ padding:'5px 0', fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:600, color, textTransform:'uppercase', letterSpacing:'0.07em' }}>{program}</td>
+                      <td style={{ padding:'5px 0', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color: total ? C.green : '#CBD5E0', fontWeight: total ? 500 : 400 }}>
+                        {total ? `$${total.toLocaleString()}` : '—'}
+                      </td>
+                      <td style={{ padding:'5px 0', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color:'#64748B' }}>{clients}</td>
+                      <td style={{ padding:'5px 0', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color: avg ? C.amber : '#CBD5E0', fontWeight: avg ? 500 : 400 }}>
+                        {avg ? `$${avg.toLocaleString()}` : '—'}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              <tfoot>
+                <tr style={{ borderTop:'1.5px solid #E2E8F0' }}>
+                  <td style={{ padding:'6px 0 2px', fontFamily:"'DM Mono',monospace", fontSize:10, fontWeight:700, color:C.text2, textTransform:'uppercase', letterSpacing:'0.07em' }}>All</td>
+                  <td style={{ padding:'6px 0 2px', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color:C.green, fontWeight:600 }}>$414,360</td>
+                  <td style={{ padding:'6px 0 2px', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color:C.text2, fontWeight:600 }}>50</td>
+                  <td style={{ padding:'6px 0 2px', textAlign:'right', fontFamily:"'DM Mono',monospace", fontSize:12, color:C.amber, fontWeight:600 }}>$8,287</td>
+                </tr>
+              </tfoot>
+            </table>
+
+          </div>
         </div>
       </div>
 

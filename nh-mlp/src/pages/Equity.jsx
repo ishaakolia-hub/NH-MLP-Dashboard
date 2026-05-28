@@ -79,7 +79,7 @@ export default function Equity() {
             Overall success rate: {overallFavPct}%. Groups above this line are doing as well or better. Groups below may face additional barriers.
           </div>
         </ChartCard>
-        <ChartCard title="Are disabled/veteran clients disproportionately in benefit denial cases?" sub="Holly's policy implication question: if these groups show up more in income cases than overall, it suggests systemic benefit denial patterns.">
+        <ChartCard title="Are disabled/veteran clients disproportionately in benefit denial cases?" sub="Policy implication: if these groups show up more in income cases than overall, it suggests systemic benefit denial patterns.">
           <div style={{ marginTop:8 }}>
             {disproportionData.map(d => (
               <div key={d.label} style={{ marginBottom:14 }}>
